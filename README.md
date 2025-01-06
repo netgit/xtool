@@ -1,2 +1,5 @@
 # xtool
-test
+
+* Install
+
+ go get github.com/netgit/xtool
