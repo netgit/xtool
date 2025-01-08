@@ -15,10 +15,12 @@ type xHash struct{}
 
 var XHash = &xHash{}
 
+// Base64Encode base64加密
 func (x *xHash) Base64Encode(data string) string {
 	return base64.StdEncoding.EncodeToString([]byte(data))
 }
 
+// Base64Decode base64 解密
 func (x *xHash) Base64Decode(data string) (string, error) {
 	decode, err := base64.StdEncoding.DecodeString(data)
 	if err != nil {
