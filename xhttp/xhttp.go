@@ -15,7 +15,7 @@ type xHttp struct{}
 
 var XHttp = &xHttp{}
 
-func (x *xHttp) DoPost(url string, header map[string]string, post map[string]interface{}) string {
+func (x *xHttp) DoPost(url string, header map[string]string, post map[string]interface{}) (int, string) {
 	client := resty.New()
 	if strings.HasPrefix(url, "https") {
 		client = client.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
@@ -29,10 +29,10 @@ func (x *xHttp) DoPost(url string, header map[string]string, post map[string]int
 	res, err := client.R().SetBody(post).Post(url)
 	if err != nil {
 		logrus.Error("http request error:", err)
-		return ""
+		return res.StatusCode(), ""
 	}
 
-	return string(res.Body())
+	return res.StatusCode(), string(res.Body())
 }
 
 func (x *xHttp) DoPostObj(url string, header map[string]string, post interface{}) (string, *http.Response) {
@@ -55,7 +55,7 @@ func (x *xHttp) DoPostObj(url string, header map[string]string, post interface{}
 	return string(res.Body()), res.RawResponse
 }
 
-func (x *xHttp) DoDel(url string, header map[string]string, post map[string]interface{}) string {
+func (x *xHttp) DoDel(url string, header map[string]string, post map[string]interface{}) (int, string) {
 	client := resty.New()
 	if strings.HasPrefix(url, "https") {
 		client = client.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
@@ -69,13 +69,13 @@ func (x *xHttp) DoDel(url string, header map[string]string, post map[string]inte
 	res, err := client.R().SetBody(post).Delete(url)
 	if err != nil {
 		logrus.Error("http request error:", err)
-		return ""
+		return res.StatusCode(), ""
 	}
 
-	return string(res.Body())
+	return res.StatusCode(), string(res.Body())
 }
 
-func (x *xHttp) DoGet(url string, header map[string]string, data map[string]interface{}) string {
+func (x *xHttp) DoGet(url string, header map[string]string, data map[string]interface{}) (int, string) {
 	client := resty.New()
 	if strings.HasPrefix(url, "https") {
 		client = client.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
@@ -89,13 +89,13 @@ func (x *xHttp) DoGet(url string, header map[string]string, data map[string]inte
 	res, err := client.R().SetBody(data).Get(url)
 	if err != nil {
 		logrus.Error("http request error:", err)
-		return ""
+		return res.StatusCode(), ""
 	}
 
-	return string(res.Body())
+	return res.StatusCode(), string(res.Body())
 }
 
-func (x *xHttp) DoPut(url string, header map[string]string, data map[string]interface{}) string {
+func (x *xHttp) DoPut(url string, header map[string]string, data map[string]interface{}) (int, string) {
 	client := resty.New()
 	if strings.HasPrefix(url, "https") {
 		client = client.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
@@ -109,14 +109,14 @@ func (x *xHttp) DoPut(url string, header map[string]string, data map[string]inte
 	res, err := client.R().SetBody(data).Put(url)
 	if err != nil {
 		logrus.Error("http request error:", err)
-		return ""
+		return res.StatusCode(), ""
 	}
 
-	return string(res.Body())
+	return res.StatusCode(), string(res.Body())
 }
 
 // DoMove 方法,待测试
-func (x *xHttp) DoMove(url string, header map[string]string, data map[string]interface{}) string {
+func (x *xHttp) DoMove(url string, header map[string]string, data map[string]interface{}) (int, string) {
 	client := resty.New()
 	if strings.HasPrefix(url, "https") {
 		client = client.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
@@ -130,10 +130,10 @@ func (x *xHttp) DoMove(url string, header map[string]string, data map[string]int
 	res, err := client.R().SetBody(data).Execute("MOVE", url)
 	if err != nil {
 		logrus.Error("http request error:", err)
-		return ""
+		return res.StatusCode(), ""
 	}
 
-	return string(res.Body())
+	return res.StatusCode(), string(res.Body())
 }
 
 func (x *xHttp) DoGetDownload(url, dirPath, saveFileName string, header map[string]string, data map[string]interface{}) string {
