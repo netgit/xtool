@@ -57,6 +57,22 @@ func (x *xFile) WriteFile(path string, data []byte) error {
 	return err
 }
 
+func (x *xFile) WriteAppendFile(fileFullPath string, data []byte) error {
+	file, err := os.OpenFile(fileFullPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		return err
+	}
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			logrus.Error(err)
+		}
+	}(file)
+
+	_, err = file.Write(data)
+	return err
+}
+
 func (x *xFile) ReadFile(path string) (data []byte, err error) {
 	return os.ReadFile(path)
 }
